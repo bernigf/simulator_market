@@ -173,6 +173,7 @@ class MarketMaker:
         self.logger.log("Summary of Strategy Quotes:", verbose=True)
         best_quote = max(strategy_quotes, key=lambda x: x["expected_earnings"], default=None)
         if best_quote:
+            self.logger.log(f"Base rate used for calculation: {float(self.base_rate) * 100} %", verbose=True)
             self.logger.log(f"Best potential trade: Sell at {best_quote['sell_price']} with maturity in {best_quote['maturity_days']} days", verbose=True)
             self.logger.log(f"Expected earnings: {best_quote['expected_earnings']} units", verbose=True)
         else:
@@ -180,23 +181,23 @@ class MarketMaker:
 
         return output
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
     
-    VERBOSE = True
+#     VERBOSE = True
     
-    # Initialize components
-    order_book_generator = OrderBookGenerator(asset_name="SYMBOL")
-    market_data_manager = MarketDataManager(order_book_generator=order_book_generator)
-    market_maker = MarketMaker(market_data_manager=market_data_manager, base_rate=0.03)
+#     # Initialize components
+#     order_book_generator = OrderBookGenerator(asset_name="SYMBOL")
+#     market_data_manager = MarketDataManager(order_book_generator=order_book_generator)
+#     market_maker = MarketMaker(market_data_manager=market_data_manager, base_rate=0.03)
 
-    # Simulate the market
-    market_data_manager.update_order_book()  # Generate a new order book
+#     # Simulate the market
+#     market_data_manager.update_order_book()  # Generate a new order book
 
-    # Generate new order_book and display it
-    order_book = market_maker.market_data_manager.current_order_book
-    market_maker.market_data_manager.order_book_generator.display_order_book_table(order_book)
+#     # Generate new order_book and display it
+#     order_book = market_maker.market_data_manager.current_order_book
+#     market_maker.market_data_manager.order_book_generator.display_order_book_table(order_book)
     
-    # Calculate the thrades and display the results
-    carry_trade_quotes = market_maker.carry_trade_strategy(N=3)
-    trades_table = market_maker.display_strategy_quotes(carry_trade_quotes)
-    print(trades_table)
+#     # Calculate the thrades and display the results
+#     carry_trade_quotes = market_maker.carry_trade_strategy(N=3)
+#     trades_table = market_maker.display_strategy_quotes(carry_trade_quotes)
+#     print(trades_table)

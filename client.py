@@ -4,6 +4,8 @@ import threading
 import curses
 import threading
 
+import argparse
+
 from copy import deepcopy
 from components import OrderBookGenerator, MarketDataManager, MarketMaker
 
@@ -177,6 +179,7 @@ def create_windows(stdscr):
             
             with LOCK:
 
+                MARKET_MAKER.logger.log_history = []
                 MARKET_MAKER.market_data_manager.update_order_book()
                 CARRY_TRADE_QUOTES = MARKET_MAKER.carry_trade_strategy()
                 CARRY_TRADE_TABLE = MARKET_MAKER.display_strategy_quotes(CARRY_TRADE_QUOTES)
@@ -231,21 +234,36 @@ def display_order_book(win):
             win.refresh()
 
 if __name__ == "__main__":
-    import sys
     
-    if '--debug' in sys.argv:
+    parser = argparse.ArgumentParser(description='Market Simulator')
+    parser.add_argument('--base_rate', type=float, default=0.03, help='Base rate for the MarketMaker instance (default: 0.03)')
+    parser.add_argument('--debug', action='store_true', help='Run the simulator in debug mode')
+    args = parser.parse_args()
+
+    if args.debug:
         CURSES_ACTIVE = False
         import ipdb; ipdb.set_trace()
+
+    if args.base_rate:
+        base_rate = args.base_rate
+    else:
+        base_rate = 0.03
 
     # Initialize components
     order_book_generator = OrderBookGenerator(asset_name="SYMBOL")
     market_data_manager = MarketDataManager(order_book_generator=order_book_generator)
-    MARKET_MAKER = MarketMaker(market_data_manager=market_data_manager, base_rate=0.03)
+    MARKET_MAKER = MarketMaker(market_data_manager=market_data_manager, base_rate=base_rate)
 
     # Create first orderbook
     MARKET_MAKER.market_data_manager.update_order_book(max_ask_items=15, max_bid_items=15)
     # Save a copy of initial orderbook values for later use
     ORDER_BOOK_START = deepcopy(market_data_manager.current_order_book)
 
-    curses.wrapper(create_windows)
+    height, width = curses.initscr().getmaxyx()
+    curses.endwin()  # End the window to avoid issues with terminal state
+
+    if height < 50 or width < 150:
+        print(f"\nDISPLAY ERROR: The terminal size is {width}x{height}.\nIt must be at least 125x50 to run the simulator in visual mode.\n")
+    else:
+        curses.wrapper(create_windows)
     

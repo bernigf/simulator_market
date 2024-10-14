@@ -26,13 +26,22 @@ pip install -r requirements.txt
 
 ## Running the Client
 
-To run the project, you need a terminal with at least a size of `125x50`. The main client file to execute is `client.py`, which provides the command-line interface for interacting with the market simulator.
+To run the project, you need a terminal with at least a size of `150x50`. The main client file to execute is `client.py`, which provides the command-line interface for interacting with the market simulator.
 
 Execute the following command to start the market simulator:
+```
+python main.py
+```
 
-```
-python client.py
-```
+This command will prompt the user for input based on the `main.py` file. The user should input the base rate as a float number, for example, `0.02` for 2%.
+
+Additionally, the user will be asked if they want to run the simulator in visual mode.
+
+If the user chooses to run in visual mode, the simulator will display a graphical interface for interacting with the market simulator.
+
+If the user chooses not to run in visual mode, the simulator will run in a non-visual mode, providing the core functionality through command-line outputs.
+
+**Important for Windows Users:** If you are running the project on a Windows environment, make sure to install the `windows-curses` package to enable proper terminal functionality. To do this, uncomment the `windows-curses` line in the `requirements.txt` file and install it along with the other dependencies.
 
 You can also run the client in debug mode by adding the --debug parameter:
 
@@ -42,29 +51,13 @@ python client.py --debug
 
 This will start the market simulator, where you can observe the order book and analyze the carry trade opportunities in real time.
 
-## Running in Non-Visual Mode
+### How to Run simulator unit-tests file
 
-If you encounter issues running the client due to problems with the `curses` library, you can still use the market simulator in a non-visual mode. This mode will allow you to perform all calculations and analyze the carry trade opportunities without relying on the terminal-based visual interface.
-
-### How to Run in Non-Visual Mode
-
-1. Open a terminal.
-2. Run the following command to start the simulator in non-visual mode:
+1. Open a terminal
+2. Execute the following command:
    ```bash
-   python components.py
+   pytest -v test.py
    ```
-
-This mode bypasses the visual interface and provides the core functionality of the simulator directly through command-line outputs, ensuring compatibility on systems that do not support the `curses` library.
-
-### How to Run
-1. Open a terminal with dimensions of at least `125x50`.
-2. If you're on Windows, ensure that `windows-curses` is installed.
-3. Execute the following command:
-   ```bash
-   python client.py
-   ```
-
-This will start the market simulator, where you can observe the order book and analyze the carry trade opportunities in real time.
 
 ## License
 
